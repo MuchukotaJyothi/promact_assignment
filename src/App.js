@@ -440,7 +440,11 @@ class App extends Component {
         <button type="button" onClick={this.onClickBtn} className="btn">
           Calculate Tax
         </button>
-        {btn ? <h1>{parseInt(amount)}</h1> : ''}
+        {btn ? (
+          <h1>Txt Amount to be Paid Annually : {parseInt(amount)}</h1>
+        ) : (
+          ''
+        )}
       </div>
     )
   }
