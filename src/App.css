@@ -13,25 +13,24 @@ body {
 
 input {
   height: 42px;
-  width: 300px;
+  width: 320px;
   border-radius: 5px;
-  border-color: #000000;
-  border-width: 1px;
-  color: #000000;
   padding-left: 14px;
   margin-top: 8px;
   margin-bottom: 0px;
+  border: 1px solid #475569;
+  color: #475569;
 }
 
 select {
   height: 42px;
-  width: 300px;
+  width: 320px;
   border-radius: 5px;
-  border-color: #000000;
-  border-width: 1px;
-  color: #000000;
   padding-left: 14px;
   margin-top: 8px;
+  border: 1px solid #475569;
+  color: #475569;
+  font-size: 15px;
 }
 
 .container {
@@ -41,25 +40,30 @@ select {
 
 .input-container {
   margin: 10px;
+  width: 360px;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 5%;
   font-family: roboto;
+  color: #334155;
+  font-family: 'Ubuntu';
 }
 
 .bg-container {
-  padding-left: 20px;
+  padding-left: 4%;
   padding-right: 20px;
   padding-bottom: 5%;
 }
 
-h3 {
+h2 {
   margin-left: 10px;
   margin-bottom: 10px;
-  margin-top: 20px;
-  font-family: roboto;
+  margin-top: 80px;
+  margin-bottom: 20px;
+  font-family: 'Helvetica Neue';
+  color: #334155;
 }
 
 .error-msg {
@@ -90,4 +94,72 @@ h3 {
 
 label {
   font-family: roboto;
+  color: #475569;
+}
+
+li {
+  list-style-type: none;
+  margin-top: 24px;
+  font-family: roboto;
+}
+
+.unordered-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  color: #475569;
+}
+
+span {
+  color: #334155;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.tax-para {
+  margin-top: 10px;
+  margin-left: 0px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.res-container {
+  background-color: #e5e5e5;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 10px;
+  margin-top: 60px;
+  padding: 10px;
+  padding-right: 30px;
+}
+
+.tax-para {
+  font-family: 'Roboto';
+  font-size: 32px;
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+.res-span {
+  font-family: 'Roboto';
+  font-size: 32px;
+  font-weight: 700;
+  color: black;
+}
+
+.btn-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.example-para {
+  font-family: 'roboto';
+  color: #475569;
+  font-size: 14px;
+  width: 344px;
+}
+
+.regime {
+  margin-top: 16px;
+  text-align: center;
+  margin-bottom: 20px;
 }

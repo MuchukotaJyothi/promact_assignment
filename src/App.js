@@ -77,7 +77,15 @@ class App extends Component {
     otherIncomeLabelInput: otherIncomeList[0].incomeTxt,
     residentialInput: residenceList[0].residenceTxt,
     inputGender: genderList[1].genderTxt,
+    clickBtnTxt: '',
     clickBtn: false,
+    totalAnnualSalary: '',
+    totalIncomeHouse: '',
+    totalCapital: '',
+    otherIncome: '',
+    totalDeductions: '',
+    clickOldTxt: '',
+    clickOld: false,
   }
 
   onChangeName = e => {
@@ -148,16 +156,8 @@ class App extends Component {
     this.setState({otherIncomeLabelInput: e.target.value})
   }
 
-  onClickBtn = () => {
-    this.setState({clickBtn: true})
-  }
-
-  render() {
+  onClickOldBtn = () => {
     const {
-      nameInput,
-      inputAge,
-      inputGender,
-      residentialInput,
       basicSalaryInput,
       HRAAndLTRInput,
       allowancesInput,
@@ -170,8 +170,6 @@ class App extends Component {
       otherIncomeInput,
       investmentExemptionInput,
       otherExemptionInput,
-      otherIncomeLabelInput,
-      clickBtn,
     } = this.state
 
     const salary =
@@ -200,31 +198,132 @@ class App extends Component {
     } else if (total >= 250000 && total <= 500000) {
       const val = total - 250000
       amount = 0.05 * val
-    } else if (total >= 500000 && total <= 750000) {
+    } else if (total > 500000 && total <= 1000000) {
+      const val = total - 500000
+      amount = 0.2 * val + 12500
+    } else if (total > 1000000) {
+      const val = total - 1000000
+      amount = 0.3 * val + 112500
+    }
+    this.setState({
+      clickBtn: false,
+      clickBtnTxt: '',
+      totalAnnualSalary: salary,
+      totalIncomeHouse: houseIncome,
+      totalCapital: CG,
+      otherIncome: otherIncomeInput,
+      totalDeductions: deductions,
+      clickOldTxt: parseInt(amount),
+      clickOld: true,
+    })
+  }
+
+  onClickBtn = () => {
+    const {
+      basicSalaryInput,
+      HRAAndLTRInput,
+      allowancesInput,
+      annualRentInput,
+      municipalTaxesInput,
+      standardDeductionInput,
+      interestPaidInput,
+      shortTermCGInput,
+      longTermCGInput,
+      otherIncomeInput,
+      investmentExemptionInput,
+      otherExemptionInput,
+    } = this.state
+
+    const salary =
+      parseInt(basicSalaryInput) +
+      parseInt(allowancesInput) -
+      parseInt(HRAAndLTRInput)
+
+    const houseIncome =
+      parseInt(annualRentInput) +
+      parseInt(municipalTaxesInput) +
+      parseInt(interestPaidInput) -
+      parseInt(standardDeductionInput)
+
+    const CG = parseInt(shortTermCGInput) + parseInt(longTermCGInput)
+
+    const deductions =
+      parseInt(investmentExemptionInput) + parseInt(otherExemptionInput)
+
+    const total =
+      houseIncome + CG + parseInt(otherIncomeInput) + salary - deductions
+
+    let amount = 0
+
+    if (total <= 250000) {
+      amount = total
+    } else if (total > 250000 && total <= 500000) {
+      const val = total - 250000
+      amount = 0.05 * val
+    } else if (total > 500000 && total <= 750000) {
       const val = total - 500000
       amount = 0.1 * val
-    } else if (total >= 750000 && total <= 1000000) {
+    } else if (total > 750000 && total <= 1000000) {
       const val = total - 750000
       amount = 0.15 * val
-    } else if (total >= 1000000 && total <= 1250000) {
+    } else if (total > 1000000 && total <= 1250000) {
       const val = total - 1000000
       amount = 0.2 * val
-    } else if (total >= 1250000 && total <= 1500000) {
+    } else if (total > 1250000 && total <= 1500000) {
       const val = total - 1250000
       amount = 0.25 * val
-    } else if (total >= 1500000) {
+    } else if (total > 1500000) {
       const val = total - 1500000
       amount = 0.3 * val
     }
 
-    const btn = clickBtn === true
+    this.setState({
+      clickBtn: true,
+      clickBtnTxt: parseInt(amount),
+      totalAnnualSalary: salary,
+      totalIncomeHouse: houseIncome,
+      totalCapital: CG,
+      otherIncome: otherIncomeInput,
+      totalDeductions: deductions,
+      clickOldTxt: '',
+      clickOld: false,
+    })
+  }
+
+  render() {
+    const {
+      nameInput,
+      inputAge,
+      inputGender,
+      residentialInput,
+      basicSalaryInput,
+      HRAAndLTRInput,
+      allowancesInput,
+      annualRentInput,
+      municipalTaxesInput,
+      standardDeductionInput,
+      interestPaidInput,
+      shortTermCGInput,
+      longTermCGInput,
+      otherIncomeInput,
+      investmentExemptionInput,
+      otherExemptionInput,
+      otherIncomeLabelInput,
+      clickBtn,
+      clickBtnTxt,
+      totalAnnualSalary,
+      totalIncomeHouse,
+      totalCapital,
+      otherIncome,
+      totalDeductions,
+      clickOld,
+      clickOldTxt,
+    } = this.state
 
     return (
       <div className="bg-container">
         <h1>Tax Calculator</h1>
-
-        <p className="error-msg">*Please Enter Numerical Values Only</p>
-
+        <h2>Personal Information</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="name">Name</label>
@@ -272,7 +371,7 @@ class App extends Component {
             </select>
           </div>
         </div>
-        <h3>Salary</h3>
+        <h2>Salary</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="basicSalary">Enter Basic Salary</label>
@@ -291,7 +390,7 @@ class App extends Component {
               onChange={this.onChangeHomeTravel}
               id="HRAAndLTR"
             />
-            <p>
+            <p className="example-para">
               Eg: House Rent Allowance (HRA) And Leave Travel Allowance (LTA)
             </p>
           </div>
@@ -303,14 +402,14 @@ class App extends Component {
               onChange={this.onChangeOtherAllowances}
               id="otherAllowances"
             />
-            <p>
+            <p className="example-para">
               Eg: Special Allowance,Transport Allowance, Reimbursements(Medical,
               Fuel, etc.), Employers Contribution to Provident Fund, Income Tax
               Deducted at Source (TDS) and Other Allowances.
             </p>
           </div>
         </div>
-        <h3>Income From House Property</h3>
+        <h2>Income From House Property</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="annualRent">Enter Annual Rent Received</label>
@@ -353,7 +452,7 @@ class App extends Component {
             />
           </div>
         </div>
-        <h3>Capital Gains</h3>
+        <h2>Capital Gains</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="shortTermCG">Enter Short-Term Capital Gains</label>
@@ -375,7 +474,7 @@ class App extends Component {
           </div>
           <br />
         </div>
-        <h3>Other Income</h3>
+        <h2>Other Income</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="otherIncome">
@@ -399,7 +498,7 @@ class App extends Component {
             />
           </div>
         </div>
-        <h3>Deductions and Exemptions</h3>
+        <h2>Deductions and Exemptions</h2>
         <div className="container">
           <div className="input-container">
             <label htmlFor="investmentExemption">
@@ -412,7 +511,7 @@ class App extends Component {
               id="investmentExemption"
             />
 
-            <p>
+            <p className="example-para">
               Eg: Life Insurance Premium, Public Provident Fund (PPF), Employee
               Provident Fund (EPF), National Savings Certificates (NSC), Tax
               Saving Fixed Deposits, Equity Linked Saving Scheme (ELSS),
@@ -429,7 +528,7 @@ class App extends Component {
               onChange={this.onChangeOtherExemption}
               id="otherExemption"
             />
-            <p>
+            <p className="example-para">
               Eg: Medical Insurance Premium Under 80D, Interest on Education
               Loan Under 80E, Donations to Charitable Institutions Under 80G,
               Interest on Savings Account Under 80TTA, Disability Under 80U,
@@ -437,11 +536,93 @@ class App extends Component {
             </p>
           </div>
         </div>
-        <button type="button" onClick={this.onClickBtn} className="btn">
-          Calculate Tax
-        </button>
-        {btn ? (
-          <h1>Txt Amount to be Paid Annually : {parseInt(amount)}</h1>
+        <div className="btn-container">
+          <button type="button" onClick={this.onClickOldBtn} className="btn">
+            Old Tax Calculator
+          </button>
+          <button type="button" onClick={this.onClickBtn} className="btn">
+            New Tax Calculator
+          </button>
+        </div>
+        {clickBtn ? (
+          <div className="res-container">
+            <h2 className="regime">New Regime</h2>
+            <ul className="unordered-list">
+              <li>
+                Name : <span>{nameInput}</span>
+              </li>
+              <li>
+                Age : <span>{inputAge}</span>
+              </li>
+              <li>
+                Gender : <span>{inputGender}</span>
+              </li>
+              <li>
+                Residential Status : <span>{residentialInput}</span>
+              </li>
+              <li>
+                Total Annual Salary : <span>{totalAnnualSalary}</span>
+              </li>
+              <li>
+                Total Income From House Property :{' '}
+                <span>{totalIncomeHouse}</span>
+              </li>
+              <li>
+                Capital Income : <span>{totalCapital}</span>
+              </li>
+              <li>
+                {otherIncomeLabelInput} Income : <span>{otherIncome}</span>
+              </li>
+              <li>
+                Deductions And Exemptions : <span>{totalDeductions}</span>
+              </li>
+            </ul>
+            <p className="tax-para">
+              Tax Amount Annually{' '}
+              <span className="res-span">{clickBtnTxt}</span>
+            </p>
+          </div>
+        ) : (
+          ''
+        )}
+        {clickOld ? (
+          <div className="res-container">
+            <h2 className="regime">Old Regime</h2>
+            <ul className="unordered-list">
+              <li>
+                Name : <span>{nameInput}</span>
+              </li>
+              <li>
+                Age : <span>{inputAge}</span>
+              </li>
+              <li>
+                Gender : <span>{inputGender}</span>
+              </li>
+              <li>
+                Residential Status : <span>{residentialInput}</span>
+              </li>
+              <li>
+                Total Annual Salary : <span>{totalAnnualSalary}</span>
+              </li>
+              <li>
+                Total Income From House Property :{' '}
+                <span>{totalIncomeHouse}</span>
+              </li>
+              <li>
+                Capital Income : <span>{totalCapital}</span>
+              </li>
+              <li>
+                {otherIncomeLabelInput} Income : <span>{otherIncome}</span>
+              </li>
+              <li>
+                Deductions And Exemptions : <span>{totalDeductions}</span>
+              </li>
+            </ul>
+            <p className="tax-para">
+              Tax Amount Annually{' '}
+              <span className="res-span">{clickOldTxt}</span>
+            </p>
+          </div>
         ) : (
           ''
         )}
